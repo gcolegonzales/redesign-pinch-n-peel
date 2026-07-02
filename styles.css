@@ -197,11 +197,6 @@ img { max-width: 100%; display: block; }
 .s3 { left: 74%; animation: rise 5.2s ease-in 1.6s infinite; }
 @keyframes rise { 0% { opacity: 0; transform: translateY(0) scale(.8); } 30% { opacity: .5; } 100% { opacity: 0; transform: translateY(-120px) scale(1.4); } }
 
-/* Ticker */
-.ticker { background: var(--gold); border-top: 4px solid var(--ink); border-bottom: 4px solid var(--ink); overflow: hidden; }
-.ticker-track { display: flex; gap: 2.5rem; white-space: nowrap; padding: .6rem 0; width: max-content; animation: scroll-x 26s linear infinite; }
-.ticker-track span { font-family: var(--display); font-size: 1rem; color: var(--ink); text-transform: uppercase; letter-spacing: .04em; }
-@keyframes scroll-x { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
 /* ---------------- Market Board ---------------- */
 .board { padding: clamp(2rem, 5vw, 3.5rem) 0; }
@@ -344,7 +339,7 @@ img { max-width: 100%; display: block; }
 .reveal.in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1; transform: none; transition: none; }
-  .ticker-track, .cf5, .steam, .map-pin, .eyebrow .dot { animation: none !important; }
+  .cf5, .steam, .map-pin, .eyebrow .dot { animation: none !important; }
 }
 
 /* ---------------- Responsive ---------------- */
