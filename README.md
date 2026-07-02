@@ -42,6 +42,16 @@ degrades gracefully to system fonts).
   clearly marked `IMG-NEEDED` where real photos should be dropped in.
 - The big-order form is a **styled concept** — it does not submit anywhere; it directs to the phone.
 
+## SEO
+
+On-page SEO is retrofitted: `Restaurant` JSON-LD structured data (name, telephone, address,
+opening hours, priceRange, `servesCuisine`, image, url, menu, `sameAs`), a `<link rel="canonical">`,
+complete Open Graph + Twitter Card tags, `robots.txt`, and `sitemap.xml`.
+
+> **Base URL placeholder:** the canonical link, `og:url`, sitemap URLs, and all schema `url`/`image`
+> fields use the literal placeholder `https://REPLACE-WITH-DOMAIN.com/`. At deploy, do a single
+> find-and-replace across `index.html`, `robots.txt`, and `sitemap.xml` to swap in the real domain.
+
 ## Contact (as published)
 
 - **Phone:** (337) 573-8549
