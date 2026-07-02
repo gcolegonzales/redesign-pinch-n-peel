@@ -49,7 +49,7 @@ opening hours, priceRange, `servesCuisine`, image, url, menu, `sameAs`), a `<lin
 complete Open Graph + Twitter Card tags, `robots.txt`, and `sitemap.xml`.
 
 > **Base URL placeholder:** the canonical link, `og:url`, sitemap URLs, and all schema `url`/`image`
-> fields use the literal placeholder `https://REPLACE-WITH-DOMAIN.com/`. At deploy, do a single
+> fields use the literal placeholder `https://pinchnpeel.com/`. At deploy, do a single
 > find-and-replace across `index.html`, `robots.txt`, and `sitemap.xml` to swap in the real domain.
 
 ## Contact (as published)
