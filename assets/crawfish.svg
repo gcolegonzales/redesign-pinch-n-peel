@@ -1,0 +1,33 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Boiled crawfish illustration">
+  <defs>
+    <radialGradient id="shell" cx="45%" cy="35%" r="75%">
+      <stop offset="0%" stop-color="#ff6a3d"/>
+      <stop offset="55%" stop-color="#e2231a"/>
+      <stop offset="100%" stop-color="#a8140d"/>
+    </radialGradient>
+  </defs>
+  <g fill="url(#shell)" stroke="#7d0d08" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+    <!-- antennae -->
+    <path d="M120 40 C104 8 74 4 58 16" fill="none"/>
+    <path d="M120 40 C136 8 166 4 182 16" fill="none"/>
+    <!-- claws -->
+    <path d="M92 74 C62 62 40 74 34 98 C30 116 44 128 60 122 C48 120 44 108 52 100 C60 92 78 96 84 108 Z"/>
+    <path d="M148 74 C178 62 200 74 206 98 C210 116 196 128 180 122 C192 120 196 108 188 100 C180 92 162 96 156 108 Z"/>
+    <!-- head -->
+    <path d="M120 48 C142 48 156 66 156 88 C156 108 140 120 120 120 C100 120 84 108 84 88 C84 66 98 48 120 48 Z"/>
+    <!-- body segments -->
+    <path d="M96 118 h48 l-4 22 h-40 Z"/>
+    <path d="M100 140 h40 l-4 22 h-32 Z"/>
+    <path d="M104 162 h32 l-4 20 h-24 Z"/>
+    <!-- tail fan -->
+    <path d="M116 182 h8 l14 30 c-9 8 -27 8 -36 0 Z"/>
+  </g>
+  <g fill="#ffd23f" opacity="0.9">
+    <circle cx="108" cy="86" r="6"/>
+    <circle cx="132" cy="86" r="6"/>
+  </g>
+  <g fill="#7d0d08">
+    <circle cx="108" cy="86" r="2.6"/>
+    <circle cx="132" cy="86" r="2.6"/>
+  </g>
+</svg>
