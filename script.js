@@ -9,6 +9,8 @@
   var toggle = document.querySelector(".nav-toggle");
   var navList = document.getElementById("nav-list");
   var scrim = document.querySelector(".nav-scrim");
+  var navClose = document.querySelector(".nav-close");
+  var headerEl = document.querySelector(".site-header");
   if (toggle && navList) {
     var setOpen = function (open) {
       navList.classList.toggle("open", open);
@@ -18,6 +20,9 @@
       }
       toggle.setAttribute("aria-expanded", String(open));
       document.body.style.overflow = open ? "hidden" : "";
+      // When the drawer is open, force the header (and thus the toggle) visible.
+      // The scroll handler is also guarded to not re-hide it while open.
+      if (open && headerEl) headerEl.classList.remove("hide");
     };
     toggle.addEventListener("click", function () {
       setOpen(!navList.classList.contains("open"));
@@ -25,6 +30,11 @@
     // Close after clicking a link
     navList.addEventListener("click", function (e) {
       if (e.target.tagName === "A") setOpen(false);
+    });
+    // Close via the always-visible X inside the drawer panel
+    if (navClose) navClose.addEventListener("click", function () {
+      setOpen(false);
+      toggle.focus();
     });
     // Close on scrim tap
     if (scrim) scrim.addEventListener("click", function () { setOpen(false); });
@@ -47,7 +57,9 @@
       else header.classList.remove("shrink");
 
       // Reveal on ANY upward scroll; hide only when scrolling down past the header.
-      if (y > lastY && y > 120) {
+      // Never hide while the mobile drawer is open (the toggle must stay reachable).
+      var navOpen = navList && navList.classList.contains("open");
+      if (!navOpen && y > lastY && y > 120) {
         header.classList.add("hide");
       } else if (y < lastY) {
         header.classList.remove("hide");

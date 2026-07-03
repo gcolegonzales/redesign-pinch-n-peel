@@ -147,6 +147,19 @@ img { max-width: 100%; display: block; }
 .mobile-nav { display: none; }
 .nav-scrim { display: none; }
 
+/* Close (X) button inside the drawer panel — always visible while open,
+   independent of the header's scroll state. Hidden on desktop by default. */
+.nav-close-row { display: none; }
+.nav-close {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; padding: 0;
+  background: var(--red); color: #fff; border: 3px solid var(--ink); border-radius: 50%;
+  cursor: pointer; box-shadow: 0 3px 0 var(--ink);
+  -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none;
+}
+.nav-close:hover { background: var(--red-dark); }
+.nav-close:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--ink); }
+
 /* ---------------- Hero ---------------- */
 .hero { position: relative; overflow: hidden; background: linear-gradient(160deg, var(--red) 0%, var(--red-dark) 55%, var(--red-deep) 100%); color: #fff; }
 .hero-bg { position: absolute; inset: 0; overflow: hidden; }
@@ -388,13 +401,16 @@ img { max-width: 100%; display: block; }
     position: absolute; top: 0; right: 0; bottom: 0; height: 100%;
     width: min(80vw, 300px);
     display: flex; flex-direction: column; gap: 0;
-    background: var(--red-deep); padding: 5rem 1.5rem 2rem;
+    background: var(--red-deep); padding: 1.2rem 1.5rem 2rem;
     margin: 0; list-style: none;
     transform: translateX(100%); transition: transform .3s ease;
     box-shadow: var(--shadow-lg); border-left: 4px solid var(--gold);
     pointer-events: auto; overflow-y: auto;
   }
   .mobile-nav .nav-list.open { transform: translateX(0); }
+
+  /* Show the always-visible close (X) at the top of the drawer panel */
+  .nav-close-row { display: flex; justify-content: flex-end; border-bottom: 0 !important; margin-bottom: .5rem; }
   .mobile-nav .nav-list li { border-bottom: 1px solid rgba(255,255,255,.12); }
   .mobile-nav .nav-list a {
     display: block; padding: 1rem 1.2rem 1rem 0; font-size: 1.15rem;
