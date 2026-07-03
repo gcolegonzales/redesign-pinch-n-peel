@@ -365,6 +365,7 @@ img { max-width: 100%; display: block; }
 
 @media (max-width: 760px) {
   .header-call { display: none; }
+  .main-nav { display: none; }
   .nav-toggle { display: flex; }
 
   /* Scrim behind the drawer — full viewport, closes on tap */
