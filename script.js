@@ -11,7 +11,53 @@
   var scrim = document.querySelector(".nav-scrim");
   var navClose = document.querySelector(".nav-close");
   var headerEl = document.querySelector(".site-header");
+  var mobileNav = document.querySelector(".mobile-nav");
+  var mq = window.matchMedia("(max-width: 760px)");
   if (toggle && navList) {
+    // Elements outside the drawer that we mark inert/aria-hidden while open.
+    var backdropEls = [headerEl, document.querySelector("main"),
+      document.querySelector(".site-footer")].filter(Boolean);
+
+    var focusables = function () {
+      return Array.prototype.slice.call(
+        navList.querySelectorAll('a[href], button:not([disabled])')
+      ).filter(function (el) { return el.offsetParent !== null || el === navClose; });
+    };
+
+    var onKeydown = function (e) {
+      if (e.key === "Escape") {
+        setOpen(false);
+        toggle.focus();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      var items = focusables();
+      if (!items.length) return;
+      var first = items[0];
+      var last = items[items.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      } else if (!navList.contains(document.activeElement)) {
+        // Focus escaped the drawer entirely — pull it back in.
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    // Keep off-canvas drawer links out of the tab order whenever the drawer
+    // isn't presented as an open overlay (closed, or at desktop widths).
+    var syncInert = function () {
+      var overlay = mq.matches && navList.classList.contains("open");
+      if (mobileNav) {
+        if (overlay) mobileNav.removeAttribute("inert");
+        else mobileNav.setAttribute("inert", "");
+      }
+    };
+
     var setOpen = function (open) {
       navList.classList.toggle("open", open);
       if (scrim) {
@@ -19,17 +65,35 @@
         scrim.hidden = !open;
       }
       toggle.setAttribute("aria-expanded", String(open));
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      document.documentElement.style.overflow = open ? "hidden" : "";
       document.body.style.overflow = open ? "hidden" : "";
       // When the drawer is open, force the header (and thus the toggle) visible.
-      // The scroll handler is also guarded to not re-hide it while open.
       if (open && headerEl) headerEl.classList.remove("hide");
+      // Mark the rest of the page inert while the drawer is open.
+      backdropEls.forEach(function (el) {
+        if (open) { el.setAttribute("inert", ""); el.setAttribute("aria-hidden", "true"); }
+        else { el.removeAttribute("inert"); el.removeAttribute("aria-hidden"); }
+      });
+      syncInert();
+      if (open) {
+        document.addEventListener("keydown", onKeydown, true);
+        var items = focusables();
+        if (items.length) items[0].focus();
+      } else {
+        document.removeEventListener("keydown", onKeydown, true);
+      }
     };
+
+    // Initial state: drawer closed, so keep it out of the tab order.
+    syncInert();
+
     toggle.addEventListener("click", function () {
       setOpen(!navList.classList.contains("open"));
     });
     // Close after clicking a link
     navList.addEventListener("click", function (e) {
-      if (e.target.tagName === "A") setOpen(false);
+      if (e.target.tagName === "A") { setOpen(false); toggle.focus(); }
     });
     // Close via the always-visible X inside the drawer panel
     if (navClose) navClose.addEventListener("click", function () {
@@ -37,14 +101,18 @@
       toggle.focus();
     });
     // Close on scrim tap
-    if (scrim) scrim.addEventListener("click", function () { setOpen(false); });
-    // Close on Escape
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && navList.classList.contains("open")) {
+    if (scrim) scrim.addEventListener("click", function () { setOpen(false); toggle.focus(); });
+
+    // Reset drawer + toggle state when crossing the desktop breakpoint.
+    var onMqChange = function () {
+      if (!mq.matches && navList.classList.contains("open")) {
         setOpen(false);
-        toggle.focus();
+      } else {
+        syncInert();
       }
-    });
+    };
+    if (mq.addEventListener) mq.addEventListener("change", onMqChange);
+    else if (mq.addListener) mq.addListener(onMqChange);
   }
 
   // ---- Sticky header: shrink + hide-on-scroll-down / reveal-on-scroll-up ----
