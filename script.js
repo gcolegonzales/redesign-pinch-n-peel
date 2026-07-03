@@ -5,37 +5,54 @@
   var yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // ---- Mobile nav toggle ----
+  // ---- Mobile nav toggle (drawer + scrim) ----
   var toggle = document.querySelector(".nav-toggle");
   var navList = document.getElementById("nav-list");
+  var scrim = document.querySelector(".nav-scrim");
   if (toggle && navList) {
-    toggle.addEventListener("click", function () {
-      var open = navList.classList.toggle("open");
+    var setOpen = function (open) {
+      navList.classList.toggle("open", open);
+      if (scrim) {
+        scrim.classList.toggle("open", open);
+        scrim.hidden = !open;
+      }
       toggle.setAttribute("aria-expanded", String(open));
+      document.body.style.overflow = open ? "hidden" : "";
+    };
+    toggle.addEventListener("click", function () {
+      setOpen(!navList.classList.contains("open"));
     });
     // Close after clicking a link
     navList.addEventListener("click", function (e) {
-      if (e.target.tagName === "A") {
-        navList.classList.remove("open");
-        toggle.setAttribute("aria-expanded", "false");
-      }
+      if (e.target.tagName === "A") setOpen(false);
     });
+    // Close on scrim tap
+    if (scrim) scrim.addEventListener("click", function () { setOpen(false); });
     // Close on Escape
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && navList.classList.contains("open")) {
-        navList.classList.remove("open");
-        toggle.setAttribute("aria-expanded", "false");
+        setOpen(false);
         toggle.focus();
       }
     });
   }
 
-  // ---- Sticky header shrink on scroll ----
+  // ---- Sticky header: shrink + hide-on-scroll-down / reveal-on-scroll-up ----
   var header = document.querySelector(".site-header");
   if (header) {
+    var lastY = window.scrollY;
     var onScroll = function () {
-      if (window.scrollY > 40) header.classList.add("shrink");
+      var y = window.scrollY;
+      if (y > 40) header.classList.add("shrink");
       else header.classList.remove("shrink");
+
+      // Reveal on ANY upward scroll; hide only when scrolling down past the header.
+      if (y > lastY && y > 120) {
+        header.classList.add("hide");
+      } else if (y < lastY) {
+        header.classList.remove("hide");
+      }
+      lastY = y;
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();

@@ -32,6 +32,8 @@
 
 * { box-sizing: border-box; }
 
+html, body { overflow-x: clip; max-width: 100%; }
+
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -44,7 +46,7 @@ body {
   background: var(--cream);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* Newsprint/kraft speckle texture on body */
@@ -106,8 +108,10 @@ img { max-width: 100%; display: block; }
   position: sticky; top: 0; z-index: 100;
   background: var(--red);
   border-bottom: 4px solid var(--ink);
-  transition: padding .25s ease, background .25s ease;
+  transition: padding .25s ease, background .25s ease, transform .3s ease;
+  -webkit-tap-highlight-color: transparent;
 }
+.site-header.hide { transform: translateY(-100%); }
 .header-inner { display: flex; align-items: center; gap: 1rem; padding: .8rem 0; transition: padding .25s ease; }
 .site-header.shrink .header-inner { padding: .45rem 0; }
 
@@ -134,8 +138,14 @@ img { max-width: 100%; display: block; }
 
 .nav-toggle {
   display: none; flex-direction: column; gap: 5px; background: none; border: 0; cursor: pointer; padding: .4rem;
+  position: relative; z-index: 130;
+  -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none;
 }
 .nav-toggle .bar { width: 26px; height: 3px; background: #fff; border-radius: 2px; transition: transform .25s ease, opacity .2s ease; }
+
+/* ---------------- Mobile drawer + scrim (hidden on desktop) ---------------- */
+.mobile-nav { display: none; }
+.nav-scrim { display: none; }
 
 /* ---------------- Hero ---------------- */
 .hero { position: relative; overflow: hidden; background: linear-gradient(160deg, var(--red) 0%, var(--red-dark) 55%, var(--red-deep) 100%); color: #fff; }
@@ -356,16 +366,42 @@ img { max-width: 100%; display: block; }
 @media (max-width: 760px) {
   .header-call { display: none; }
   .nav-toggle { display: flex; }
-  .main-nav { position: static; }
-  .nav-list {
-    position: fixed; inset: 0 0 0 auto; width: min(78vw, 300px);
-    flex-direction: column; gap: 0; background: var(--red-deep); padding: 5rem 1.5rem 2rem;
-    transform: translateX(100%); transition: transform .3s ease; box-shadow: var(--shadow-lg);
-    border-left: 4px solid var(--gold);
+
+  /* Scrim behind the drawer — full viewport, closes on tap */
+  .nav-scrim {
+    display: block; position: fixed; inset: 0; z-index: 110;
+    background: rgba(42, 26, 18, .55);
+    opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s ease;
+    -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none;
   }
-  .nav-list.open { transform: translateX(0); }
-  .nav-list li { border-bottom: 1px solid rgba(255,255,255,.12); }
-  .nav-list a { display: block; padding: 1rem 0; font-size: 1.15rem; }
+  .nav-scrim.open { opacity: 1; visibility: visible; }
+
+  /* Clip wrapper: fixed full-viewport, overflow hidden so the off-canvas
+     panel can never widen the page or leave a bottom gap. */
+  .mobile-nav {
+    display: block; position: fixed; inset: 0; z-index: 120;
+    overflow: hidden; pointer-events: none;
+    -webkit-tap-highlight-color: transparent; user-select: none; -webkit-user-select: none;
+  }
+  .mobile-nav .nav-list {
+    position: absolute; top: 0; right: 0; bottom: 0; height: 100%;
+    width: min(80vw, 300px);
+    display: flex; flex-direction: column; gap: 0;
+    background: var(--red-deep); padding: 5rem 1.5rem 2rem;
+    margin: 0; list-style: none;
+    transform: translateX(100%); transition: transform .3s ease;
+    box-shadow: var(--shadow-lg); border-left: 4px solid var(--gold);
+    pointer-events: auto; overflow-y: auto;
+  }
+  .mobile-nav .nav-list.open { transform: translateX(0); }
+  .mobile-nav .nav-list li { border-bottom: 1px solid rgba(255,255,255,.12); }
+  .mobile-nav .nav-list a {
+    display: block; padding: 1rem 1.2rem 1rem 0; font-size: 1.15rem;
+    color: #fff; text-decoration: none; font-weight: 800;
+  }
+  .mobile-nav .nav-list a::after { content: none; }
+
+  /* Hamburger morphs into an X while open */
   .nav-toggle[aria-expanded="true"] .bar:nth-child(1) { transform: translateY(8px) rotate(45deg); }
   .nav-toggle[aria-expanded="true"] .bar:nth-child(2) { opacity: 0; }
   .nav-toggle[aria-expanded="true"] .bar:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
