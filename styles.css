@@ -404,6 +404,7 @@ img { max-width: 100%; display: block; }
     background: var(--red-deep); padding: 1.2rem 1.5rem 2rem;
     margin: 0; list-style: none;
     transform: translateX(100%); transition: transform .3s ease;
+    will-change: transform; backface-visibility: hidden;
     box-shadow: var(--shadow-lg); border-left: 4px solid var(--gold);
     pointer-events: auto; overflow-y: auto;
   }
